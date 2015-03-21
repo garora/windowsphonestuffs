@@ -32,5 +32,37 @@ namespace ConsumeWebAPI
         }
 
 
+        //private async void GetServerData_HTTPClient(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        using (HttpClient client = new HttpClient())
+        //        {
+        //            client.BaseAddress = new Uri("http://crudwithwebapi.azurewebsites.net");
+
+        //            var url = "api/serverdata";
+
+        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        //            HttpResponseMessage response = await client.GetAsync(url);
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                var data = response.Content.ReadAsStringAsync();
+        //                var lstData = JsonConvert.DeserializeObject<List<ServerData>>(data.Result.ToString());
+
+        //                LstServerData.ItemsSource = lstData;
+
+        //            }
+
+        //            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+
+        //}
+
     }
 }

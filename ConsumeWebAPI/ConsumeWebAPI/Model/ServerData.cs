@@ -5,8 +5,8 @@ namespace ConsumeWebAPI.Model
     public class ServerData
     {
         public int Id { get; set; }
-        public string InitialDate { get; set; }
-        public string EndDate { get; set; }
+        public DateTime InitialDate { get; set; }
+        public DateTime EndDate { get; set; }
         public int OrderNumber { get; set; }
         public bool IsDirty { get; set; }
         public string IP { get; set; }
@@ -23,8 +23,7 @@ namespace ConsumeWebAPI.Model
             get
             {
                 return string.Format("Start Date:{0}, End Date:{1}, Order Number:{2}, IP:{3}, Record Type:{4}",
-                    InitialDate, EndDate, OrderNumber, IP,
-                    Type);
+                    InitialDate.ToString("F"), EndDate.ToString("F"), OrderNumber, IP, Type);
             }
         }
     }
