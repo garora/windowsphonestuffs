@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using ConsumeWebAPI.Model;
 using Microsoft.Phone.Controls;
 using Newtonsoft.Json;
@@ -14,27 +17,49 @@ namespace ConsumeWebAPI
         public MainPage()
         {
             InitializeComponent();
-
-            lstServerData.ItemsSource = new ServerDataViewModel().DisplayData(GetServerData());
+            var data = GetServerData();
+            LstServerData.ItemsSource = new ServerDataViewModel().DisplayData(data.Result);
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
         }
-
-        private List<ServerData> GetServerData()
+        private async Task<List<ServerData>> GetServerData()
         {
-            const string uri = "http://crudwithwebapi.azurewebsites.net/api/serverdata";
             var serverData = new List<ServerData>();
-            var client = new WebClient();
-            client.Headers["Accept"] = "application/json";
-            client.DownloadStringAsync(new Uri(uri));
-            client.DownloadStringCompleted += (s1, e1) =>
+
+            using (var client = new HttpClient())
             {
-                serverData = new List<ServerData>(JsonConvert.DeserializeObject<ServerData[]>(e1.Result.ToString(CultureInfo.InvariantCulture)));
-            };
+                client.BaseAddress = new Uri("http://crudwithwebapi.azurewebsites.net");
+
+                const string url = "api/serverdata/1";
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await client.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode) return serverData;
+
+                var data = response.Content.ReadAsStringAsync();
+                serverData = JsonConvert.DeserializeObject<List<ServerData>>(data.Result);
+            }
 
             return serverData;
         }
+        //private List<ServerData> GetServerData()
+        //{
+        //    const string uri = "http://crudwithwebapi.azurewebsites.net/api/serverdata";
+        //    var serverData = new List<ServerData>();
+        //    var client = new WebClient();
+        //    client.Headers["Accept"] = "application/json";
+        //    client.DownloadStringAsync(new Uri(uri));
+        //    client.DownloadStringCompleted += (s1, e1) =>
+        //    {
+        //        serverData =
+        //            JsonConvert.DeserializeObject<List<ServerData>>(e1.Result.ToString(CultureInfo.InvariantCulture));
+        //    };
+
+        //    return serverData;
+        //}
 
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()
